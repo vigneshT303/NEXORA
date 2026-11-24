@@ -1,0 +1,24 @@
+#!/bin/sh
+# Maven Wrapper script for Linux/macOS
+BASE_DIR=$(dirname "$0")
+WRAPPER_PROP="$BASE_DIR/.mvn/wrapper/maven-wrapper.properties"
+
+if [ ! -f "$WRAPPER_PROP" ]; then
+  echo "Error: Cannot find $WRAPPER_PROP"
+  exit 1
+fi
+
+DIST_URL=$(grep "^distributionUrl=" "$WRAPPER_PROP" | cut -d= -f2)
+TARGET_DIR="$HOME/.m2/wrapper/dists/apache-maven-3.9.9"
+MAVEN_HOME="$TARGET_DIR/apache-maven-3.9.9"
+MVN_EXEC="$MAVEN_HOME/bin/mvn"
+
+if [ ! -f "$MVN_EXEC" ]; then
+  echo "Downloading Maven..."
+  mkdir -p "$TARGET_DIR"
+  curl -fsSL "$DIST_URL" -o "$TARGET_DIR/maven.zip"
+  unzip -q -o "$TARGET_DIR/maven.zip" -d "$TARGET_DIR"
+  chmod +x "$MVN_EXEC"
+fi
+
+exec "$MVN_EXEC" "$@"
